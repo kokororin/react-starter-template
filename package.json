@@ -24,6 +24,7 @@
     "url": "https://github.com/kokororin/react-starter-template/issues"
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.1",
     "babel-core": "^6.0.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
@@ -49,6 +50,7 @@
     "node-sass": "^4.5.3",
     "open-browser-webpack-plugin": "^0.0.5",
     "optimize-js-plugin": "^0.0.4",
+    "postcss-loader": "^2.0.5",
     "react-hot-loader": "^v3.0.0-beta.6",
     "sass-loader": "^6.0.5",
     "style-loader": "^0.17.0",

@@ -1,6 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const postcssLoaderOption = {
+  loader: 'postcss-loader',
+  options: {
+    config: {
+      path: path.join(__dirname, 'postcss.config.js')
+    }
+  }
+};
+
 module.exports = {
   output: {
     path: path.join(__dirname, '/../dist/assets'),
@@ -21,10 +30,19 @@ module.exports = {
       loader: 'eslint-loader'
     }, {
       test: /\.css$/,
-      loader: ['style-loader', 'css-loader']
+      use: [
+        'style-loader',
+        'css-loader',
+        postcssLoaderOption
+      ]
     }, {
       test: /\.scss/,
-      loader: ['style-loader', 'css-loader', 'sass-loader']
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+        postcssLoaderOption
+      ]
     }, {
       test: /\.(png|jpg|gif|woff|woff2|ttf|svg|eot)(\?|\?[a-z0-9]+)?$/,
       loader: 'url-loader?limit=8192'
