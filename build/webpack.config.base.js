@@ -45,7 +45,13 @@ module.exports = {
       ]
     }, {
       test: /\.(png|jpg|gif|woff|woff2|ttf|svg|eot)(\?|\?[a-z0-9]+)?$/,
-      loader: 'url-loader?limit=8192'
+      use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+          name: 'images/[hash].[ext]'
+        }
+      }]
     }]
   },
   plugins: [
