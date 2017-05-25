@@ -4,7 +4,6 @@
   "description": "A webpack + react + redux + ES6 starter template.",
   "main": "",
   "scripts": {
-    "copy": "copyfiles -f ./src/index.html ./src/CNAME ./dist",
     "build": "cross-env NODE_ENV=production webpack --progress --config build/webpack.config.js",
     "lint": "eslint --max-warnings 0 ./src",
     "lint:fix": "eslint --fix ./src",
