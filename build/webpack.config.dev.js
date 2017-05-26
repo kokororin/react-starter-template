@@ -10,7 +10,7 @@ module.exports = {
     inline: true,
     port: 3000,
     host: '0.0.0.0',
-    publicPath: '/assets/',
+    publicPath: '/',
     noInfo: false,
     hot: true,
     stats: {

@@ -12,9 +12,9 @@ const postcssLoaderOption = {
 
 module.exports = {
   output: {
-    path: path.join(__dirname, '/../dist/assets'),
-    filename: 'bundle.js',
-    publicPath: '/assets/'
+    path: path.join(__dirname, '/../dist'),
+    filename: '[name].js',
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.jsx'],
