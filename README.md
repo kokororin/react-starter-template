@@ -1,6 +1,6 @@
 # React Starter Template
 
-A webpack + react + redux + ES6 starter template.
+A simple CLI for creating webpack + react + redux + ES6 starter apps
 
 * react
 * react-router-component
@@ -8,8 +8,14 @@ A webpack + react + redux + ES6 starter template.
 * react-redux
 * redux-thunk
 
+## Install
+```bash
+npm install -g react-starter-template
+```
 
-## Commands
-* `npm start`
-* `npm run build`
-* `npm run lint`
+## Usage
+```bash
+react-starter my-awesome-app
+cd my-awesome-app
+yarn
+```
