@@ -1,15 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const postcssLoaderOption = {
-  loader: 'postcss-loader',
-  options: {
-    config: {
-      path: path.join(__dirname, 'postcss.config.js')
-    }
-  }
-};
-
 module.exports = {
   output: {
     path: path.join(__dirname, '/../dist'),
@@ -33,7 +24,7 @@ module.exports = {
       use: [
         'style-loader',
         'css-loader',
-        postcssLoaderOption
+        'postcss-loader'
       ]
     }, {
       test: /\.scss/,
@@ -41,7 +32,7 @@ module.exports = {
         'style-loader',
         'css-loader',
         'sass-loader',
-        postcssLoaderOption
+        'postcss-loader'
       ]
     }, {
       test: /\.(png|jpg|gif|woff|woff2|ttf|svg|eot)(\?|\?[a-z0-9]+)?$/,
