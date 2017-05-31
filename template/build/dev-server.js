@@ -1,20 +1,27 @@
 const path = require('path');
 const express = require('express');
 const webpack = require('webpack');
-const devMiddleware = require('webpack-dev-middleware');
-const hotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
 const compiler = webpack(config);
-const logUpdate = require('log-update');
+const ora = require('ora');
 
 const app = new express();
 
-compiler.apply(new webpack.ProgressPlugin(function(percentage, msg) {
-  logUpdate('==> ' + (percentage * 100).toFixed(2) + '%', msg);
-}));
+const devMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
+const hotMiddleware = require('webpack-hot-middleware')(compiler, {
+  log: function() {}
+});
 
-app.use(devMiddleware(compiler, config.devServer));
-app.use(hotMiddleware(compiler));
+// force page reload when html-webpack-plugin template changes
+compiler.plugin('compilation', function(compilation) {
+  compilation.plugin('html-webpack-plugin-after-emit', function(data, cb) {
+    hotMiddleware.publish({ action: 'reload' });
+    cb();
+  });
+});
+
+app.use(devMiddleware);
+app.use(hotMiddleware);
 
 app.use('*', function(req, res, next) {
   const filename = path.join(compiler.outputPath, 'index.html');
@@ -28,10 +35,16 @@ app.use('*', function(req, res, next) {
   });
 });
 
+const spinner = ora('Waiting webpack compiling');
+
+devMiddleware.waitUntilValid(function() {
+  spinner.stop();
+});
+
 app.listen(config.devServer.port, function onAppListening(err) {
   if (err) {
     console.error(err);
   } else {
-    console.info('==>');
+    spinner.start();
   }
 });

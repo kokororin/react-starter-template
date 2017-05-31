@@ -2,6 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+const ip = require('ip');
 
 module.exports = {
   devServer: {
@@ -15,7 +17,8 @@ module.exports = {
     hot: true,
     stats: {
       colors: true
-    }
+    },
+    quiet: true
   },
   entry: [
     'babel-polyfill',
@@ -59,6 +62,14 @@ module.exports = {
     }),
     new OpenBrowserPlugin({ url: 'http://localhost:3000' }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
+    new FriendlyErrorsPlugin({
+      compilationSuccessInfo: {
+        messages: [
+          'You application is running here http://localhost:3000',
+          'You can open http://' + ip.address() + ':3000 on your mobile devices'
+        ]
+      }
+    }),
   ]
 };
