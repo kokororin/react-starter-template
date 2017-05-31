@@ -6,6 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const OptimizeJsPlugin = require('optimize-js-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineChunkWebpackPlugin = require('html-webpack-inline-chunk-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
@@ -27,6 +28,33 @@ module.exports = {
       test: /\.(js|jsx)$/,
       loader: 'babel-loader',
       include: path.join(__dirname, '/../src')
+    }, {
+      test: /\.css$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [{
+            loader: 'css-loader',
+            options: {
+              minimize: true
+            }
+          },
+          'postcss-loader'
+        ]
+      })
+    }, {
+      test: /\.scss/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [{
+            loader: 'css-loader',
+            options: {
+              minimize: true
+            }
+          },
+          'postcss-loader',
+          'sass-loader'
+        ]
+      })
     }]
   },
   plugins: [
@@ -67,6 +95,7 @@ module.exports = {
     new InlineChunkWebpackPlugin({
       inlineChunks: ['manifest']
     }),
+    new ExtractTextPlugin('[name].[contenthash].css'),
     new CleanWebpackPlugin(['dist'], {
       root: path.join(__dirname, '/../'),
       verbose: true,
