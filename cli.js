@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 require('es6-promise').polyfill();
 
 const path = require('path');
@@ -10,55 +11,75 @@ const download = require('download-git-repo');
 const ora = require('ora');
 const home = require('user-home');
 const rm = require('rimraf').sync;
-const colors = require('colors');
+const util = require('util');
+const chalk = require('chalk');
 const pkg = require('./package.json');
 
 const inputs = argv._;
 const tmp = path.join(home, `.${pkg.name}`);
 
-if (inputs.length === 0) {
-  console.log(`${pkg.name} v${pkg.version}`.green);
-} else if (inputs.length > 1) {
-  console.log('Invalid arguments'.red);
-} else {
-  let packageInfo = {};
-  packageInfo.name = inputs[0];
-  packageInfo.author = os.userInfo().username;
+function logInfo() {
+  const msg = util.format.apply(util.format, arguments);
+  console.log(chalk.white(`  ${msg}`));
+}
 
-  const spinner = ora('Downloading template')
-  spinner.start();
-
-  if (fs.exists(tmp)) {
-    rm(tmp);
+function logError(message) {
+  if (message instanceof Error) {
+    message = message.message.trim()
   }
+  const msg = util.format.apply(util.format, arguments);
+  console.error(chalk.red(`  ${msg}`));
+  process.exit(1);
+}
 
-  const downloadRepo = function() {
-    return new Promise(function(resolve, reject) {
-      download(`${pkg.author}/${pkg.name}`, tmp, { clone: false }, function(err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+function downloadRepo() {
+  return new Promise(function(resolve, reject) {
+    download(`${pkg.author}/${pkg.name}`, tmp, { clone: false }, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
     });
-  }
-
-  downloadRepo().then(function() {
-    spinner.stop();
-    console.log('Download template successfully'.green);
-    fse.copySync(path.join(tmp, 'template'), `./${packageInfo.name}`);
-    let packageFile = `./${packageInfo.name}/package.json`;
-    let packageFileText = fs.readFileSync(packageFile, 'utf8');
-    let packageFileObject = JSON.parse(packageFileText);
-    packageFileObject.name = packageInfo.name;
-    packageFileObject.author = packageInfo.author;
-    packageFileText = JSON.stringify(packageFileObject, null, 2);
-    console.log('All things has done'.green);
-    console.log('Please run following commands manually'.green);
-    console.log(`$ cd ${packageInfo.name}`.cyan);
-    console.log(`$ yarn`.cyan);
-  }).catch(function(err) {
-    throw err;
   });
 }
+
+
+if (inputs.length === 0) {
+  logInfo(`${pkg.name} v${pkg.version}`);
+  process.exit(0);
+} else if (inputs.length > 1) {
+  logError('Invalid arguments');
+}
+
+
+let packageInfo = {};
+packageInfo.name = inputs[0];
+packageInfo.author = os.userInfo().username;
+
+const spinner = ora('Downloading template')
+spinner.start();
+
+if (fs.exists(tmp)) {
+  rm(tmp);
+}
+
+downloadRepo().then(function() {
+  spinner.stop();
+  logInfo('Download template successfully.\n');
+  fse.copySync(path.join(tmp, 'template'), `./${packageInfo.name}`);
+  let packageFile = `./${packageInfo.name}/package.json`;
+  let packageFileText = fs.readFileSync(packageFile, 'utf8');
+  let packageFileObject = JSON.parse(packageFileText);
+  packageFileObject.name = packageInfo.name;
+  packageFileObject.author = packageInfo.author;
+  packageFileText = JSON.stringify(packageFileObject, null, 2);
+  logInfo(`Generated "${packageInfo.name}".\n`);
+  logInfo('To get started:\n');
+  logInfo(`      cd ${packageInfo.name}`);
+  logInfo('      yarn');
+  logInfo('      npm start');
+}).catch(function(err) {
+  logInfo('\n  Error occurred:');
+  logError(err);
+});
