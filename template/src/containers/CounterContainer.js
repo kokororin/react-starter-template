@@ -12,16 +12,16 @@ class CounterContainer extends React.Component {
   render() {
     return (
       <Counter
-        value={ this.props.counter.count }
-        onIncrement={ () => this.props.dispatch(CounterActions.increase()) }
-        onDecrement={ () => this.props.dispatch(CounterActions.decrease()) } />
+        value={this.props.counter.count}
+        onIncrement={() => this.props.dispatch(CounterActions.increase())}
+        onDecrement={() => this.props.dispatch(CounterActions.decrease())}
+      />
     );
   }
 }
 
-export default connect((state) => {
+export default connect(state => {
   return {
     counter: state.counter
-  }
+  };
 })(CounterContainer);
-

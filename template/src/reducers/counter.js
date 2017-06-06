@@ -1,8 +1,11 @@
 import { CounterActions } from '@/actions';
 
-export default function counter(state = {
+export default function counter(
+  state = {
     count: 0
-  }, action) {
+  },
+  action
+) {
   switch (action.type) {
     case CounterActions.types.INCREASE:
       return {

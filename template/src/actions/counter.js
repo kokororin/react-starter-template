@@ -1,9 +1,6 @@
 import createTypes from 'namespaced-types';
 
-export const types = createTypes('counter', [
-  'INCREASE',
-  'DECREASE'
-]);
+export const types = createTypes('counter', ['INCREASE', 'DECREASE']);
 
 export function increase() {
   return {
